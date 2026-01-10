@@ -1,0 +1,33 @@
+services:
+  mcp-server:
+    build:
+      context: ./mcp-server
+    environment:
+      - FIREFLY_III_PAT=${FIREFLY_III_PAT}
+      - FIREFLY_III_BASE_URL=${FIREFLY_III_BASE_URL}
+      - FIREFLY_III_PRESET=${FIREFLY_III_PRESET:-basic}
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    restart: unless-stopped
+    networks:
+      - firefly-net
+
+  chainlit-app:
+    build:
+      context: ./chainlit-app
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - MCP_SERVER_URL=http://mcp-server:3000/sse
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mcp-server
+    restart: unless-stopped
+    networks:
+      - firefly-net
+
+networks:
+  firefly-net:
+    driver: bridge

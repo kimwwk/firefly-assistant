@@ -1,0 +1,4 @@
+/* Wider element sidebar panel */
+[data-panel-group-id] > [data-panel]:last-child {
+  flex: 40 1 0px !important;
+}
