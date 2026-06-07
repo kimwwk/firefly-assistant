@@ -1,6 +1,10 @@
 # Firefly Assistant
 
-A personal finance assistant powered by Claude and Firefly III, built with Chainlit.
+A personal finance assistant powered by Claude and [Firefly III](https://www.firefly-iii.org/), built with [Chainlit](https://chainlit.io/).
+
+Chat with your own finances: ask about balances, search transactions, and create or edit entries in Firefly III — with a human-approval step before anything is written. It's **self-hosted** and runs against *your* Firefly III instance, so there is no public demo; follow the Quick Start below to run it locally.
+
+**Prerequisites:** Docker + Docker Compose, a running Firefly III instance (with a Personal Access Token), and an Anthropic API key.
 
 ## Features
 
@@ -69,19 +73,27 @@ Edit `chainlit-app/.chainlit/config.toml` for UI customization.
 
 ## Development
 
-Run locally without Docker:
+Run the two services locally without Docker.
+
+**MCP server** — uses the published [`@firefly-iii-mcp/server`](https://www.npmjs.com/package/@firefly-iii-mcp/server) npm package (no local build needed):
 
 ```bash
-# MCP Server
-cd ../firefly-iii-mcp
-npm install && npm run build
-node packages/server/dist/app.js --pat $PAT --baseUrl $URL --preset basic
+npx @firefly-iii-mcp/server \
+  --pat "$FIREFLY_III_PAT" \
+  --baseUrl "$FIREFLY_III_BASE_URL" \
+  --preset basic \
+  --port 3000
+```
 
-# Chainlit App
+**Chainlit app:**
+
+```bash
 cd chainlit-app
 pip install -r requirements.txt
 chainlit run app.py
 ```
+
+For a deeper look at how the pieces fit together, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## License
 
